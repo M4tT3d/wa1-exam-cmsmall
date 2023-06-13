@@ -2,13 +2,8 @@ import { IconHome2, IconLogin } from "@tabler/icons-react"
 import { Navbar as BootstrapNavbar, Container, Nav } from "react-bootstrap"
 import "./index.css"
 
-export default function Layout({ children }) {
-  return (
-    <>
-      <Navbar />
-      {children}
-    </>
-  )
+export default function Layout() {
+  return <Navbar />
 }
 
 function Navbar() {
