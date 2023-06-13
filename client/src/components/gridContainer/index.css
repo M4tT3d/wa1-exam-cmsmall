@@ -1,0 +1,10 @@
+.grid-wrapper {
+  margin-top: 10px;
+}
+.grid-wrapper > * + * {
+  margin-top: 15px;
+}
+
+.grid-wrapper > :last-child {
+  margin-bottom: 40px;
+}

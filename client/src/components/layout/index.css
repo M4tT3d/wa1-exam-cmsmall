@@ -1,0 +1,21 @@
+.link {
+  display: flex;
+  align-items: center;
+}
+
+.link:hover {
+  color: white;
+}
+
+.link > * {
+  margin: 0;
+}
+
+@media screen and (max-width: 576px) {
+  .link {
+    margin-left: 0.1rem;
+  }
+  .link p {
+    margin: 0 0 0 0.3rem;
+  }
+}
