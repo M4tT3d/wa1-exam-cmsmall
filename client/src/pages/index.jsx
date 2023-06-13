@@ -21,6 +21,7 @@ export default function Index() {
       {data.map((item) => (
         <Card
           key={item.id}
+          id={item.id}
           title={item.title}
           author={item.author}
           publishedDate={item.publishedDate}
