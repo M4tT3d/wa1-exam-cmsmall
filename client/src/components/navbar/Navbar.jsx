@@ -2,11 +2,7 @@ import { IconHome2, IconLogin } from "@tabler/icons-react"
 import { Navbar as BootstrapNavbar, Container, Nav } from "react-bootstrap"
 import "./index.css"
 
-export default function Layout() {
-  return <Navbar />
-}
-
-function Navbar() {
+export default function Navbar() {
   const links = [
     { title: "Home", icon: IconHome2 },
     { title: "Login", icon: IconLogin },

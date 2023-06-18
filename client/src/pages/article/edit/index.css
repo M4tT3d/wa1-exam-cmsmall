@@ -1,0 +1,24 @@
+.wrapper-art-form {
+  margin: 0 auto;
+  width: 90%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.edit-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px #ccc;
+  padding: 20px;
+}
+@media screen and (min-width: 768px) {
+  .wrapper-art-form {
+    width: 90%;
+  }
+  .edit-card {
+    width: 90%;
+    max-width: 650px;
+  }
+}
