@@ -1,25 +1,34 @@
 import { IconBook } from "@tabler/icons-react"
-import { Card as BootstrapCard, Button, Image } from "react-bootstrap"
+import { Card as BootstrapCard, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import Img1 from "../../assets/images/wallpaper_1.webp"
-import { BlockTypes } from "../../utils/constants"
+import { BlockTypes, images } from "../../utils/constants"
 import "./index.css"
 
 export default function Card({ id, title, author, publishedDate, content }) {
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
   const date = dateRegex.test(publishedDate) ? new Date(publishedDate) : new Date()
   const cardDate = date.toLocaleString("en-US", { month: "short", day: "numeric" })
-  const isImage = content.type === BlockTypes.IMAGE
-  const isText = content.type === BlockTypes.PARAGRAPH || content.type === BlockTypes.HEADER
 
   const getElement = (item) => {
+    const getImage = (name) => {
+      const image = images.filter((image) => image.name === name)[0]
+      return image ? image.value : "https://placehold.co/318x191.webp?text=Placeholder"
+    }
     switch (item.type) {
+      case BlockTypes.HEADER:
       case BlockTypes.PARAGRAPH:
         return <BootstrapCard.Text className="card-text">{item.data}</BootstrapCard.Text>
       case BlockTypes.IMAGE:
-        return <Image src={item.data} fluid className="rounded-3 img" />
-      case BlockTypes.HEADER:
-        return <h3>{item.data}</h3>
+        return (
+          <BootstrapCard.Img
+            src={getImage(item.data)}
+            fluid
+            variant="bottom"
+            className="rounded-4"
+            width={318}
+            height={191}
+          />
+        )
     }
   }
 
@@ -40,17 +49,9 @@ export default function Card({ id, title, author, publishedDate, content }) {
         <BootstrapCard.Subtitle className="card-subtitle">
           {author} - {cardDate}
         </BootstrapCard.Subtitle>
-        {isText && getElement(content)}
+        {getElement(content[1])}
       </BootstrapCard.Body>
-      {isImage && (
-        <BootstrapCard.Img
-          variant="bottom"
-          className="rounded-4"
-          src={Img1}
-          width={318}
-          height={191}
-        />
-      )}
+      {getElement(content[0])}
     </BootstrapCard>
   )
 }

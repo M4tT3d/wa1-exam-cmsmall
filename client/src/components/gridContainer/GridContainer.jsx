@@ -31,7 +31,7 @@ export default function GridContainer({ cols, maxCols, children }) {
     const rows = []
     for (let i = 0; i < maxRows; i++) {
       rows.push(
-        <Row key={`row-${i}`} className="justify-content-center" as="article">
+        <Row key={`row-${i}`} className="justify-content-center grid-row" as="article">
           {children.slice(i * maxTabCols, (i + 1) * maxTabCols).map((item, i) => (
             <Col key={`row-${i}-col-${i}`} xs="auto" md={6} lg="auto" xl={3} as="section">
               {item}
@@ -43,5 +43,5 @@ export default function GridContainer({ cols, maxCols, children }) {
     return rows
   }
 
-  return <Container className="grid-wrapper grid-wrapper-row">{generateRows()}</Container>
+  return <Container className="grid-wrapper">{generateRows()}</Container>
 }
