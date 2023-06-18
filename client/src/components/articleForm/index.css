@@ -23,6 +23,7 @@
 }
 .form-buttons-group {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 .form-actions > * + * {
@@ -55,5 +56,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+  }
+  .form-buttons-group{
+    flex-direction: row;
   }
 }

@@ -21,7 +21,7 @@ const schema = z.object({
     .array(
       z.object({
         type: z.nativeEnum(BlockTypes),
-        value: z.string().min(1, { message: "Value is required" }),
+        data: z.string().min(1, { message: "Value is required" }),
       })
     )
     .min(2, { message: customErrorMessage[0] })
@@ -41,7 +41,7 @@ export default function ArticleForm({ article }) {
     title: { message: "" },
     author: { message: "" },
     publishedDate: { message: "" },
-    blocks: [{ message: "" }],
+    blocks: article ? article.contentBlocks.map(() => ({ message: "" })) : [{ message: "" }],
   })
   const showCustomFeedback = errors.blocks.some(
     (item) => item.message === customErrorMessage[0] || item.message === customErrorMessage[1]
@@ -55,9 +55,13 @@ export default function ArticleForm({ article }) {
     article && article.publishedDate ? new Date(article.publishedDate) : null
   )
   const [creationDate, setCreationDate] = useState(
-    article && article.creationDate ? article.creationDate : new Date()
+    article ? new Date(article.creationDate) : new Date()
   )
-  const [fields, setFields] = useState([{ type: BlockTypes.HEADER, value: "" }])
+  const [fields, setFields] = useState(
+    article
+      ? article.contentBlocks.map((item) => ({ type: item.type, value: item.data }))
+      : [{ type: BlockTypes.HEADER, value: "" }]
+  )
 
   // useNavigate hook is necessary to change page
   const navigate = useNavigate()
@@ -196,7 +200,7 @@ export default function ArticleForm({ article }) {
       author,
       creationDate,
       publishedDate,
-      contentBlocks: fields,
+      contentBlocks: fields.map((field) => ({ type: field.type, data: field.value })),
     }
     const validationResults = schema.safeParse(article)
     if (!validationResults.success) {
