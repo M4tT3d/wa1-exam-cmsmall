@@ -37,6 +37,9 @@
   height: auto;
   margin-bottom: 15px;
 }
+.label-description{
+  font-size: 15px;
+}
 @media screen and (min-width: 768px) {
   .form-row {
     flex-direction: row;
