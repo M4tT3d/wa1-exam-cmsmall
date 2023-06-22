@@ -14,7 +14,7 @@ export function getUser(email, password) {
         resolve(false)
       } else {
         const user = {
-          id: row.id,
+          id: row.userId,
           username: row.email,
           name: row.name,
           surname: row.surname,

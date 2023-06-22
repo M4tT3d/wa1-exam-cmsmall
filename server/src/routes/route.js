@@ -9,7 +9,7 @@ import {
 } from "../controllers/article.js"
 import { createSession, deleteSession, getCurrentUser } from "../controllers/auth.js"
 import { getGlobalData, updateGlobalData } from "../controllers/global.js"
-import { canEditArticle, isAdmin, isLoggedIn } from "../utils.js"
+import { canEditArticle, isAdmin, isLoggedIn, validateArticle } from "../utils.js"
 
 const router = Router()
 
@@ -23,9 +23,9 @@ router.get("/sessions/current", getCurrentUser)
 
 //Articles routes
 router.get("/articles", getArticles)
-router.post("/articles", isLoggedIn, createArticle)
+router.post("/articles", isLoggedIn, validateArticle, createArticle)
 router.get("/user/articles", isLoggedIn, getArticleByUserId)
-router.patch("/articles/:id", isLoggedIn, canEditArticle, updateArticle)
+router.patch("/articles/:id", isLoggedIn, canEditArticle, validateArticle, updateArticle)
 router.delete("/articles/:id", isLoggedIn, canEditArticle, deleteArticle)
 
 // Global routes
