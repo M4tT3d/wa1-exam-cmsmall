@@ -19,3 +19,9 @@ export const images = [
   { name: "wallpaper_5", value: Img5 },
   { name: "wallpaper_6", value: Img6 },
 ]
+
+export const articleStatus = Object.freeze({
+  PUBLISHED: "published",
+  DRAFT: "draft",
+  SCHEDULED: "scheduled",
+})

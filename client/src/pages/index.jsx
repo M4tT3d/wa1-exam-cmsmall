@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
+import { getAllPost } from "../api/api"
 import Card from "../components/card/Card"
 import GridContainer from "../components/gridContainer/GridContainer"
 import Loading from "../components/loading/Loading"
-import { getAllPost } from "../utils/api"
 import { BlockTypes } from "../utils/constants"
 
 export default function Index() {
@@ -31,8 +31,8 @@ export default function Index() {
     <GridContainer cols={data.length} maxCols={3}>
       {data.map((item) => (
         <Card
-          key={item.id}
-          id={item.id}
+          key={item.articleId}
+          id={item.articleId}
           title={item.title}
           author={item.author}
           publishedDate={item.publishedDate}

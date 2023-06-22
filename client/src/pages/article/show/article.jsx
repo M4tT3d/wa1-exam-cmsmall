@@ -2,9 +2,10 @@ import { IconArrowLeft } from "@tabler/icons-react"
 import { Fragment, useEffect, useState } from "react"
 import { Container, Image } from "react-bootstrap"
 import { Link, useParams } from "react-router-dom"
+import { getPostById } from "../../../api/api"
 import Loading from "../../../components/loading/Loading"
-import { getPostById } from "../../../utils/api"
 import { BlockTypes, images } from "../../../utils/constants"
+import { getArticleStatus } from "../../../utils/utils"
 import "./index.css"
 
 export default function Article() {
@@ -29,6 +30,7 @@ export default function Article() {
             src={images.filter((image) => image.name === item.data)[0].value}
             fluid
             className="rounded-3 img"
+            loading="lazy"
           />
         )
       case BlockTypes.HEADER:
@@ -44,11 +46,18 @@ export default function Article() {
         Back to home
       </Link>
       <h1 className="fw-bold fs-1 text-capitalize">{data.title}</h1>
-      <h2 className="fs-5 text-muted mb-3">{`${data.author} | ${data.publishedDate}`}</h2>
+      <h2 className="fs-5 text-muted mb-3">{`${data.author} | ${getArticleStatus(
+        data.publishedDate
+      )}`}</h2>
       <div className="content">
         {data.contentBlocks.map((item, index) => (
           <Fragment key={`block-${index}`}>{getElement(item)}</Fragment>
         ))}
+        <p className="text-muted">{`Created on ${new Date(data.createdAt).toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}`}</p>
       </div>
     </Container>
   )

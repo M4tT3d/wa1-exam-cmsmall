@@ -2,13 +2,10 @@ import { IconBook } from "@tabler/icons-react"
 import { Card as BootstrapCard, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import { BlockTypes, images } from "../../utils/constants"
+import { getArticleStatus } from "../../utils/utils"
 import "./index.css"
 
 export default function Card({ id, title, author, publishedDate, content }) {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-  const date = dateRegex.test(publishedDate) ? new Date(publishedDate) : new Date()
-  const cardDate = date.toLocaleString("en-US", { month: "short", day: "numeric" })
-
   const getElement = (item) => {
     const getImage = (name) => {
       const image = images.filter((image) => image.name === name)[0]
@@ -22,7 +19,6 @@ export default function Card({ id, title, author, publishedDate, content }) {
         return (
           <BootstrapCard.Img
             src={getImage(item.data)}
-            fluid
             variant="bottom"
             className="rounded-4"
             width={318}
@@ -47,7 +43,7 @@ export default function Card({ id, title, author, publishedDate, content }) {
           {title}
         </BootstrapCard.Title>
         <BootstrapCard.Subtitle className="card-subtitle">
-          {author} - {cardDate}
+          {`${author} - ${getArticleStatus(publishedDate)}`}
         </BootstrapCard.Subtitle>
         {getElement(content[1])}
       </BootstrapCard.Body>

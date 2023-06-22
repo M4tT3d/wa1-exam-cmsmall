@@ -1,5 +1,8 @@
 .grid-wrapper {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .grid-wrapper > * + * {
   margin-top: 15px;

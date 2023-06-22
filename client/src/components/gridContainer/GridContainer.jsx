@@ -11,13 +11,13 @@ export default function GridContainer({ cols, maxCols, children }) {
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
     window.addEventListener("resize", handleResize)
-    if (windowWidth < 576) {
+    if (windowWidth < 768) {
       setMaxTabCols(1)
       setMaxRows(Math.ceil(cols / maxTabCols))
-    } else if (windowWidth > 575 && windowWidth < 991) {
+    } else if (windowWidth >= 768 && windowWidth < 1200) {
       setMaxTabCols(2)
       setMaxRows(Math.ceil(cols / maxTabCols))
-    } else if (windowWidth >= 991 && windowWidth < 1201) {
+    } else if (windowWidth >= 1200) {
       setMaxTabCols(3)
       setMaxRows(Math.ceil(cols / maxTabCols))
     } else {
