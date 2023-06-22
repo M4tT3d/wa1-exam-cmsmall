@@ -2,6 +2,7 @@
 
 import db from "./db/connection.js"
 import { roles } from "./utils/constants.js"
+import { articleSchema } from "./utils/schemas.js"
 
 /** Defining authentication verification middleware **/
 export function isLoggedIn(req, res, next) {
@@ -36,4 +37,20 @@ export function isAdmin(req, res, next) {
     return next()
   }
   return res.status(401).json({ error: "Not authorized. You are not an admin" })
+}
+
+export function validateArticle(req, res, next) {
+  const results = articleSchema.safeParse(req.body)
+  const errors = []
+
+  if (!results.success) {
+    results.error.issues.forEach((issue) => {
+      errors.push({ path: issue.path, maessage: issue.message })
+    })
+    return res.status(400).json({ error: errors })
+  }
+  if (results.data.userId === req.user.id || req.user.role === roles.ADMIN) return next()
+  return res
+    .status(401)
+    .json({ error: "Not authorized. You can't create an article for another user" })
 }

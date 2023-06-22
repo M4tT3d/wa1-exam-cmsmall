@@ -45,12 +45,7 @@ export function insertArticle(article) {
   return new Promise((resolve, reject) => {
     db.run(
       `INSERT INTO article (title, userId, createdAt, publishedDate) VALUES (?, ?, ?, ?)`,
-      [
-        article.title,
-        article.userId,
-        new Date(article.creationDate).toISOString().substring(0, 10),
-        new Date(article.publishedDate).toISOString().substring(0, 10),
-      ],
+      [article.title, article.userId, article.creationDate, article.publishedDate ?? null],
       function (error) {
         if (error) reject(error)
         const articleId = this.lastID

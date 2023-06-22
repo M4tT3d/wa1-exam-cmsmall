@@ -52,9 +52,9 @@ INSERT INTO user (email, name, surname, role, salt, hash) VALUES ('user3@email.c
 -- ARTICLES
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 1', '2019-01-01', '2024-01-01', 2);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 2', '2019-01-02', '2019-01-02', 3);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 3', '2019-01-03', null, 3);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 3', null, '2019-01-03', 3);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 4', '2019-01-04', '2019-01-04', 4);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 5', '2019-01-05', null, 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 5', null, '2019-01-05', 4);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 6', '2019-01-06', '2024-01-06', 4);
 
 -- BLOCKS

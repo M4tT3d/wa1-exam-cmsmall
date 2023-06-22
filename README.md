@@ -216,8 +216,8 @@
 
   - `articleId`: integer - Article ID (PK)
   - `title`: text - The article title
-  - `publishedDate`: date - The publication date
-  - `createdAt`: date - The creation date
+  - `publishedDate`: text - The publication date
+  - `createdAt`: text - The creation date
   - `userId`: integer - User ID (FK). It is used to find the iser that own the article
     <br />
     <br />
