@@ -136,6 +136,36 @@
     ```
 <br />
 
+- **GET** `/api/globals/:key` - Get the info based on the key param
+
+  - Request Body: **None**
+  - Response Status: `200` OK, `500` if some errors occur
+  - Response Body:
+    ```
+    {
+        value: text - The info requested
+    }
+    ```
+<br />
+
+- **PATCH** `/api/globals/:key` - Update the value of the :key
+
+  - Prerequisite: User is an admin
+  - Request Body:
+    ```
+    {
+        value: text - The info that you want to update
+    }
+    ```
+  - Response Status: `200` OK, `500` if some errors occur
+  - Response Body:
+    ```
+      {
+        message: text - A message to notify that everything has done
+      }
+    ```
+<br />
+
 - **POST** `/api/sessions` - Create a new session with the logged in user
 
   - Request Body:
@@ -145,7 +175,7 @@
       password: 'password'
     }
     ```
-  - Response Status: `201` OK, `401` Unauthorized
+  - Response Status: `200` OK, `401` Unauthorized
   - Response Body:
     ```
     {
