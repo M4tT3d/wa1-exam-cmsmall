@@ -22,6 +22,7 @@ router.delete("/sessions/current", isLoggedIn, deleteSession)
 router.get("/sessions/current", getCurrentUser)
 
 //Articles routes
+router.get("/articles/:id", getArticles)
 router.get("/articles", getArticles)
 router.post("/articles", isLoggedIn, validateArticle, createArticle)
 router.get("/user/articles", isLoggedIn, getArticleByUserId)

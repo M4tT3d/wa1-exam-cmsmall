@@ -50,12 +50,13 @@ INSERT INTO user (email, name, surname, role, salt, hash) VALUES ('user2@email.c
 INSERT INTO user (email, name, surname, role, salt, hash) VALUES ('user3@email.com', 'Dan', 'Reynolds', 'user', '37a7d1a971e6b0d74fc662dd961c0d6c', 'e34e8aabb57feea430aec7a554bcb6b79565e1195edcf5c70fc13ff85fe8a5e6');
 
 -- ARTICLES
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 1', '2019-01-01', '2024-01-01', 2);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 1', '2024-01-01', '2023-01-01', 2);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 2', '2019-01-02', '2019-01-02', 3);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 3', null, '2019-01-03', 3);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 4', '2019-01-04', '2019-01-04', 4);
 INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 5', null, '2019-01-05', 4);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 6', '2019-01-06', '2024-01-06', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 6', '2024-01-06', '2019-01-06', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 7', '2023-01-06', '2023-01-06', 4);
 
 -- BLOCKS
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 1', 0, 1);
@@ -69,10 +70,14 @@ INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem 
 INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_3', 0, 3);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 4', 1, 4);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 0, 4);
-INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'wallpaper_4', 1, 4);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'test test', 1, 4);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 5', 0, 5);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 5);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_5', 2, 5);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 6', 0, 6);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 6);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_6', 2, 6);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 7', 0, 7);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 7);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_5', 2, 7);
+
