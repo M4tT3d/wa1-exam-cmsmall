@@ -8,7 +8,8 @@ import {
   updateArticle,
 } from "../controllers/article.js"
 import { createSession, deleteSession, getCurrentUser } from "../controllers/auth.js"
-import { isAuthorized, isLoggedIn } from "../utils.js"
+import { getGlobalData, updateGlobalData } from "../controllers/global.js"
+import { canEditArticle, isAdmin, isLoggedIn } from "../utils.js"
 
 const router = Router()
 
@@ -24,6 +25,10 @@ router.get("/sessions/current", getCurrentUser)
 router.get("/articles", getArticles)
 router.post("/articles", isLoggedIn, createArticle)
 router.get("/user/articles", isLoggedIn, getArticleByUserId)
-router.patch("/articles/:id", isLoggedIn, isAuthorized, updateArticle)
-router.delete("/articles/:id", isLoggedIn, isAuthorized, deleteArticle)
+router.patch("/articles/:id", isLoggedIn, canEditArticle, updateArticle)
+router.delete("/articles/:id", isLoggedIn, canEditArticle, deleteArticle)
+
+// Global routes
+router.get("/globals/:key", getGlobalData)
+router.patch("/globals/:key", isLoggedIn, isAdmin, updateGlobalData)
 export default router

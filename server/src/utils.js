@@ -12,7 +12,7 @@ export function isLoggedIn(req, res, next) {
 }
 
 // Defining authorization verification middleware
-export function isAuthorized(req, res, next) {
+export function canEditArticle(req, res, next) {
   const articleId = parseInt(req.params.id, 10)
   if (isNaN(articleId)) {
     return res.status(400).json({ error: "Invalid article id" })
@@ -29,4 +29,11 @@ export function isAuthorized(req, res, next) {
     }
     return res.status(401).json({ error: "Not authorized" })
   })
+}
+
+export function isAdmin(req, res, next) {
+  if (req.user.role === roles.ADMIN) {
+    return next()
+  }
+  return res.status(401).json({ error: "Not authorized. You are not an admin" })
 }
