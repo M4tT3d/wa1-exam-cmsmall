@@ -29,15 +29,31 @@ function reduceArticlesBlocks(rows) {
   return articles
 }
 
-export function listArticles() {
+export function listArticles(articleId) {
   return new Promise((resolve, reject) => {
-    db.all(
-      `SELECT * FROM article JOIN user ON article.userId = user.userId JOIN block ON article.articleId = block.articleId WHERE publishedDate IS NOT NULL ORDER BY publishedDate DESC`,
-      (error, rows) => {
-        if (error) reject(error)
-        resolve(reduceArticlesBlocks(rows))
-      }
-    )
+    if (articleId === null) {
+      db.all(
+        `SELECT * FROM article JOIN user ON article.userId = user.userId JOIN block ON article.articleId = block.articleId WHERE publishedDate IS NOT NULL ORDER BY publishedDate DESC`,
+        (error, rows) => {
+          if (error) reject(error)
+          resolve(
+            reduceArticlesBlocks(
+              rows.filter((article) => new Date() >= new Date(article.publishedDate))
+            )
+          )
+        }
+      )
+    } else {
+      db.all(
+        `SELECT * FROM article JOIN user ON article.userId = user.userId JOIN block ON article.articleId = block.articleId WHERE publishedDate IS NOT NULL AND article.articleId = ? ORDER BY publishedDate DESC`,
+        [articleId],
+        (error, rows) => {
+          if (error) reject(error)
+          if (!rows || rows.length === 0) reject("Article not found")
+          else resolve(reduceArticlesBlocks(rows)[0])
+        }
+      )
+    }
   })
 }
 
