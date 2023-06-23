@@ -1,0 +1,49 @@
+.wrapper-login-form {
+  margin: 0 auto;
+  width: 90%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px #ccc;
+  padding: 20px;
+  max-width: 400px;
+}
+
+.login-form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.login-form-actions > * + * {
+  margin-top: 15px;
+}
+
+.login-form-error {
+  color: var(--bs-form-invalid-color);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .login-form-group {
+    width: 100%;
+  }
+
+  .login-card{
+    width: 400px;
+  }
+}
