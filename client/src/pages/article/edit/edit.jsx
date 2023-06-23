@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap"
 import { useParams } from "react-router-dom"
 import ArticleForm from "../../../components/articleForm/ArticleForm"
 import Loading from "../../../components/loading/Loading"
-import { getPostById } from "../../../utils/api"
+import { getPostById } from "../../../api/api"
 import "./index.css"
 
 export default function EditArticle() {
