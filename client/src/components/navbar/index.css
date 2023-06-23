@@ -1,21 +1,18 @@
-.link {
+.link-content {
   display: flex;
   align-items: center;
-}
-
-.link:hover {
   color: white;
 }
 
-.link > * {
+.link-content > * {
   margin: 0;
 }
 
-@media screen and (max-width: 576px) {
-  .link {
-    margin-left: 0.1rem;
+@media screen and (min-width: 992px) {
+  .link-content {
+    color: grey;
   }
-  .link p {
-    margin: 0 0 0 0.3rem;
+  .link-content:hover {
+    color: white;
   }
 }
