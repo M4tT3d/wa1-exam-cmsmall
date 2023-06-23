@@ -7,6 +7,7 @@ import AddArticle from "./pages/article/add/add"
 import EditArticle from "./pages/article/edit/edit"
 import Article from "./pages/article/show/article"
 import NotFound from "./pages/error"
+import EditCMSGlobals from "./pages/globals/edit"
 import LoginPage from "./pages/login/loginPage"
 import "./styles/global.css"
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/article/:id" element={<Article />} />
             <Route path="/article/:id/edit" element={<EditArticle />} />
             <Route path="/article/add" element={<AddArticle />} />
+            <Route path="/globals/edit" element={<EditCMSGlobals />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

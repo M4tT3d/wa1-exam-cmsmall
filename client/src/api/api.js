@@ -3,6 +3,17 @@
 //import server url from .env file
 const serverUrl = import.meta.env.VITE_SERVER_URL
 
+async function handleRequest(url, options, expectedStatus = 200) {
+  try {
+    const data = await fetch(url, options)
+    const dataJson = await data.json()
+    if (data.status === expectedStatus) return dataJson
+    else throw new Error(dataJson.error?.message || dataJson.error)
+  } catch (error) {
+    return { error: error.message }
+  }
+}
+
 export async function getAllPost() {
   const url = new URL("/api/articles", serverUrl)
   try {
@@ -33,16 +44,19 @@ export async function getPostById(id) {
 
 export async function getGlobal(key) {
   const url = new URL(`/api/globals/${key}`, serverUrl)
-  try {
-    const data = await (
-      await fetch(url, {
-        method: "GET",
-      })
-    ).json()
-    return data
-  } catch (error) {
-    return { error: error }
-  }
+  return await handleRequest(url, { method: "GET" })
+}
+
+export async function updateGlobal(key, value) {
+  const url = new URL(`/api/globals/${key}`, serverUrl)
+  return await handleRequest(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ value: value }),
+  })
 }
 
 export async function login(userData) {

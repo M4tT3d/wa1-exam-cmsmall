@@ -25,3 +25,8 @@ export const articleStatus = Object.freeze({
   DRAFT: "draft",
   SCHEDULED: "scheduled",
 })
+
+export const roles = Object.freeze({
+  ADMIN: "admin",
+  USER: "user",
+})

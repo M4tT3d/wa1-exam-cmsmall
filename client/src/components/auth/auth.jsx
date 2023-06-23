@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { getGlobal, getSession, login, logout } from "../../api/api"
+import { getGlobal, getSession, login, logout, updateGlobal } from "../../api/api"
 
 const AuthContext = createContext({
   user: null,
-  settings: {},
+  settings: { title: "CMSmall" },
+  setGlobals: () => new Promise(() => null),
   logout: () => new Promise(() => null),
   login: () => new Promise(() => null),
 })
@@ -17,13 +18,18 @@ export function AuthProvider({ ...props }) {
     setUser(data)
     return data
   }
+  const saveGlobals = async (key, newSettings) => {
+    const data = await updateGlobal(key, newSettings)
+    if (data.error) return data
+    setSettings({ title: newSettings })
+    return data
+  }
 
   useEffect(() => {
     Promise.all([getSession(), getGlobal("title")]).then((data) => {
-      console.log(data)
       if (data[0]?.error) setUser(null)
       else setUser(data[0])
-      setSettings({ settings: { title: data[1]?.value ?? "CMSmall" } })
+      setSettings({ title: data[1]?.value })
     })
   }, [])
 
@@ -34,6 +40,7 @@ export function AuthProvider({ ...props }) {
         settings,
         logout: () => logout().then(() => setUser(null)),
         login: (userData) => authLogin(userData),
+        setGlobals: (key, newSettings) => saveGlobals(key, newSettings),
       }}
       {...props}
     />

@@ -1,7 +1,15 @@
-import { IconFilePlus, IconHome2, IconList, IconLogin, IconLogout } from "@tabler/icons-react"
+import {
+  IconAdjustments,
+  IconFilePlus,
+  IconHome2,
+  IconList,
+  IconLogin,
+  IconLogout,
+} from "@tabler/icons-react"
 import { useState } from "react"
 import { Navbar as BootstrapNavbar, Container, Nav } from "react-bootstrap"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { roles } from "../../utils/constants"
 import { useAuth } from "../auth/auth"
 import "./index.css"
 
@@ -38,6 +46,18 @@ export default function Navbar() {
         />
         <BootstrapNavbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto">
+            {user && user.role === roles.ADMIN && (
+              <Nav.Link as="div">
+                <Link
+                  to="/globals/edit"
+                  className="link-content text-decoration-none"
+                  onClick={() => setIsExpanded(false)}
+                >
+                  <IconAdjustments size={20} />
+                  <p>Globals</p>
+                </Link>
+              </Nav.Link>
+            )}
             {linksToUse.map((link, index) => (
               <Nav.Link key={index} as="div">
                 <Link
