@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react"
-import { getAllPublishedArticles } from "../api/api"
+import { Button, Container } from "react-bootstrap"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { getAllPublishedArticles, getArticleByUserId } from "../api/api"
+import { useAuth } from "../components/auth/auth"
 import Card from "../components/card/Card"
 import GridContainer from "../components/gridContainer/GridContainer"
 import Loading from "../components/loading/Loading"
 import { BlockTypes } from "../utils/constants"
 
 export default function Index() {
+  const { user } = useAuth()
   const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const navigation = useNavigate()
+  const location = useLocation()
   const getCardContents = (item) => {
     const content = []
     if (!item.contentBlocks.some((block) => block.type === BlockTypes.IMAGE))
@@ -20,13 +26,39 @@ export default function Index() {
   }
 
   useEffect(() => {
-    getAllPublishedArticles().then((data) => {
-      setData([...data])
-      setIsLoading(false)
-    })
-  }, [])
+    setIsLoading(true)
+    if (location.pathname === "/my-articles") {
+      if (!user) {
+        navigation("/login", { replace: true })
+        return
+      }
+      getArticleByUserId().then((data) => {
+        setData([...data])
+        setIsLoading(false)
+      })
+    } else
+      getAllPublishedArticles().then((data) => {
+        setData([...data])
+        setIsLoading(false)
+      })
+  }, [location.pathname, navigation, user])
 
   if (isLoading) return <Loading />
+  if (user && data.length === 0)
+    return (
+      <Container>
+        <h1>No articles found</h1>
+        <Link to="/articles/add">
+          <Button>Add new article</Button>
+        </Link>
+      </Container>
+    )
+  else if (!user && data.length === 0)
+    return (
+      <Container>
+        <h1>No articles found</h1>
+      </Container>
+    )
   return (
     <GridContainer cols={data.length} maxCols={3}>
       {data.map((item) => (

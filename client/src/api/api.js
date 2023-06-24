@@ -24,6 +24,11 @@ export async function getArticleById(id) {
   return await handleRequest(url, { method: "GET" })
 }
 
+export async function getArticleByUserId() {
+  const url = new URL("/api/user/articles", serverUrl)
+  return await handleRequest(url, { method: "GET", credentials: "include" })
+}
+
 export async function getGlobal(key) {
   const url = new URL(`/api/globals/${key}`, serverUrl)
   return await handleRequest(url, { method: "GET" })
