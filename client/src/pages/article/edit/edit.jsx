@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react"
 import { Card } from "react-bootstrap"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { getArticleById } from "../../../api/api"
 import ArticleForm from "../../../components/articleForm/ArticleForm"
 import Loading from "../../../components/loading/Loading"
-import { getPostById } from "../../../api/api"
 import "./index.css"
 
 export default function EditArticle() {
   const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const { id } = useParams()
+  const navigation = useNavigate()
 
   useEffect(() => {
-    getPostById(id).then((data) => {
+    getArticleById(id).then((data) => {
+      if (data.error) {
+        setData(null)
+        setIsLoading(false)
+        navigation("/error", { replace: true, state: { error: data.error } })
+        return
+      }
       setData(data)
       setIsLoading(false)
     })
-  }, [id])
+  }, [id, navigation])
 
   if (isLoading) return <Loading />
   return (

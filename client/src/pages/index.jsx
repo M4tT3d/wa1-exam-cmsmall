@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getAllPost } from "../api/api"
+import { getAllPublishedArticles } from "../api/api"
 import Card from "../components/card/Card"
 import GridContainer from "../components/gridContainer/GridContainer"
 import Loading from "../components/loading/Loading"
@@ -20,7 +20,7 @@ export default function Index() {
   }
 
   useEffect(() => {
-    getAllPost().then((data) => {
+    getAllPublishedArticles().then((data) => {
       setData([...data])
       setIsLoading(false)
     })

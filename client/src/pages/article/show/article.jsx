@@ -1,8 +1,8 @@
 import { IconArrowLeft } from "@tabler/icons-react"
 import { Fragment, useEffect, useState } from "react"
 import { Container, Image } from "react-bootstrap"
-import { Link, useParams } from "react-router-dom"
-import { getPostById } from "../../../api/api"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { getArticleById } from "../../../api/api"
 import Loading from "../../../components/loading/Loading"
 import { BlockTypes, images } from "../../../utils/constants"
 import { getArticleStatus } from "../../../utils/utils"
@@ -12,13 +12,20 @@ export default function Article() {
   const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const { id } = useParams()
+  const navigation = useNavigate()
 
   useEffect(() => {
-    getPostById(id).then((data) => {
+    getArticleById(id).then((data) => {
+      if (data.error) {
+        setData(null)
+        setIsLoading(false)
+        navigation("/error", { replace: true, state: { error: data.error } })
+        return
+      }
       setData(data)
       setIsLoading(false)
     })
-  }, [id])
+  }, [id, navigation])
 
   const getElement = (item) => {
     switch (item.type) {

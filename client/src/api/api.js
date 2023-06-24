@@ -14,32 +14,14 @@ async function handleRequest(url, options, expectedStatus = 200) {
   }
 }
 
-export async function getAllPost() {
+export async function getAllPublishedArticles() {
   const url = new URL("/api/articles", serverUrl)
-  try {
-    const data = await (
-      await fetch(url, {
-        method: "GET",
-      })
-    ).json()
-    return data
-  } catch (error) {
-    return { errror: error }
-  }
+  return await handleRequest(url, { method: "GET" })
 }
 
-export async function getPostById(id) {
+export async function getArticleById(id) {
   const url = new URL(`/api/articles/${id}`, serverUrl)
-  try {
-    const data = await (
-      await fetch(url, {
-        method: "GET",
-      })
-    ).json()
-    return data
-  } catch (error) {
-    return { error: error }
-  }
+  return await handleRequest(url, { method: "GET" })
 }
 
 export async function getGlobal(key) {
@@ -61,46 +43,22 @@ export async function updateGlobal(key, value) {
 
 export async function login(userData) {
   const url = new URL("/api/sessions", serverUrl)
-  try {
-    const data = await fetch(url, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    })
-    const dataJson = await data.json()
-    if (data.status === 200) return dataJson
-    else throw new Error(dataJson.error?.message || dataJson.error)
-  } catch (error) {
-    return { error: error.message }
-  }
+  return await handleRequest(url, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  })
 }
 
 export async function getSession() {
   const url = new URL("/api/sessions/current", serverUrl)
-  try {
-    const data = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-    })
-    const dataJson = await data.json()
-    if (data.status === 200) return dataJson
-    else throw new Error(dataJson.error?.message || dataJson.error)
-  } catch (error) {
-    return { error: error.message }
-  }
+  return await handleRequest(url, { method: "GET", credentials: "include" })
 }
 
 export async function logout() {
   const url = new URL("/api/sessions/current", serverUrl)
-  try {
-    const data = await fetch(url, { method: "DELETE", credentials: "include" })
-    const dataJson = await data.json()
-    if (data.status === 200) return dataJson
-    else throw new Error(dataJson.error?.message || dataJson.error)
-  } catch (error) {
-    return { error: error }
-  }
+  return await handleRequest(url, { method: "DELETE", credentials: "include" })
 }
