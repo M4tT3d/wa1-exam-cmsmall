@@ -34,7 +34,7 @@ export default function Card({ id, title, author, publishedDate, content }) {
         <Link to={`/articles/${id}`} className="text-reset">
           <Button variant="dark" size="sm" className="card-btn">
             <IconBook size={20} />
-            <p>Read post</p>
+            <p>Read article</p>
           </Button>
         </Link>
       </BootstrapCard.Header>
