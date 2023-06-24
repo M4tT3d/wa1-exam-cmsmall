@@ -105,11 +105,11 @@ export default function LoginPage() {
             <Button variant="primary" type="submit" disabled={loading}>
               Sign In
             </Button>
-            <Button variant="danger" disabled={loading}>
-              <Link to="/" className="text-decoration-none text-white">
+            <Link to="/" className="text-decoration-none text-white" style={{ width: "100%" }}>
+              <Button variant="danger" disabled={loading} style={{ width: "100%" }}>
                 Back to Home
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </Form>
       </Card>

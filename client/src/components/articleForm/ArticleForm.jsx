@@ -4,37 +4,56 @@ import { useState } from "react"
 import { Button, Col, Form, Image, Row } from "react-bootstrap"
 import DatePicker, { registerLocale } from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
+import { createArticle, updateArticle } from "../../api/api"
 import { BlockTypes, images } from "../../utils/constants"
 import "./index.css"
 registerLocale("it", it)
 
-const customErrorMessage = ["At least two blocks are required", "At least one header is required"]
+const customErrorMessage = [
+  "At least two blocks are required",
+  "At least one header is required and at least one paragraph or image is required",
+]
 
-const schema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  author: z.string().min(1, { message: "Author is required" }),
-  creationDate: z.date(),
-  publishedDate: z.date().optional().nullable(),
-  contentBlocks: z
-    .array(
-      z.object({
-        type: z.nativeEnum(BlockTypes),
-        data: z.string().min(1, { message: "Value is required" }),
-      })
-    )
-    .min(2, { message: customErrorMessage[0] })
-    .refine(
-      (value) => {
-        const hasHeader = value.some((item) => item.type === BlockTypes.HEADER)
-        return hasHeader
-      },
-      { message: customErrorMessage[1], custom: true }
-    ),
-})
+const schema = z
+  .object({
+    articleId: z.number().int().optional(),
+    title: z.string().min(1, { message: "Title is required" }),
+    userId: z.number().int({ message: "Author is required" }),
+    creationDate: z.date(),
+    publishedDate: z.date().optional().nullable(),
+    contentBlocks: z
+      .array(
+        z.object({
+          type: z.nativeEnum(BlockTypes),
+          data: z.string().min(1, { message: "Value is required" }),
+        })
+      )
+      .min(2, { message: customErrorMessage[0] })
+      .refine(
+        (value) => {
+          const hasHeader = value.some((item) => item.type === BlockTypes.HEADER)
+          const hasOthers = value.some((item) => item.type !== BlockTypes.HEADER)
+          return hasHeader && hasOthers
+        },
+        { message: customErrorMessage[1], custom: true }
+      ),
+  })
+  .superRefine((obj, ctx) => {
+    const { creationDate, publishedDate } = obj
+    if (publishedDate) {
+      if (new Date(publishedDate) < new Date(creationDate)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Published date must be after creation date",
+          path: ["publishedDate"],
+        })
+      }
+    }
+  })
 
-export default function ArticleForm({ article }) {
+export default function ArticleForm({ article, users, isUser = true }) {
   //form management
   const [validated, setValidated] = useState(false)
   const [errors, setErrors] = useState({
@@ -47,29 +66,23 @@ export default function ArticleForm({ article }) {
     (item) => item.message === customErrorMessage[0] || item.message === customErrorMessage[1]
   )
   const [loading, setLoading] = useState(false)
+  const navigator = useNavigate()
 
   //article management
+  const [articleId, setArticleId] = useState(article ? article.articleId : undefined)
   const [title, setTitle] = useState(article ? article.title : "")
-  const [author, setAuthor] = useState(article ? article.author : "")
+  const [author, setAuthor] = useState(article ? article.userId : users[0].userId)
   const [publishedDate, setPublishedDate] = useState(
     article && article.publishedDate ? new Date(article.publishedDate) : null
   )
   const [creationDate, setCreationDate] = useState(
-    article ? new Date(article.creationDate) : new Date()
+    article ? new Date(article.createdAt) : new Date()
   )
   const [fields, setFields] = useState(
     article
       ? article.contentBlocks.map((item) => ({ type: item.type, value: item.data }))
       : [{ type: BlockTypes.HEADER, value: "" }]
   )
-
-  // useNavigate hook is necessary to change page
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  // if the film is saved (eventually modified) we return to the list of all films,
-  // otherwise, if cancel is pressed, we go back to the previous location (given by the location state)
-  const nextpage = location.state?.nextpage || "/"
 
   const handleChangeValue = (index, event) => {
     const newFields = [...fields]
@@ -187,22 +200,24 @@ export default function ArticleForm({ article }) {
     }
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    setLoading(true)
     setErrors({
       title: { message: "" },
       author: { message: "" },
       publishedDate: { message: "" },
       blocks: errors.blocks.map(() => ({ message: "" })),
     })
-    const article = {
+    const articleToValidate = {
+      articleId,
       title,
-      author,
+      userId: author,
       creationDate,
       publishedDate,
       contentBlocks: fields.map((field) => ({ type: field.type, data: field.value })),
     }
-    const validationResults = schema.safeParse(article)
+    const validationResults = schema.safeParse(articleToValidate)
     if (!validationResults.success) {
       validationResults.error.issues.forEach((val) => {
         switch (val.path[0]) {
@@ -248,27 +263,46 @@ export default function ArticleForm({ article }) {
         }
       })
       setValidated(false)
+      setLoading(false)
       return
     }
     setValidated(true)
-    setLoading(true)
-    new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
-      setLoading(false)
-    })
-    console.log(article)
-
-    // String.trim() method is used for removing leading and ending whitespaces from the title.
-    // const film = { title: title.trim(), favorite: favorite, rating: rating, watchDate: watchDate }
-
-    /* In this solution validations are executed through HTML.
-       If you prefer JavaScript validations, this is the right place for coding them. */
-
-    // if (props.film) {
-    //   film.id = props.film.id
-    //   props.editFilm(film)
-    // } else props.addFilm(film)
-
-    // navigate("/article/id")
+    if (article) {
+      const res = await updateArticle(articleId, {
+        ...validationResults.data,
+        contentBlocks: validationResults.data.contentBlocks.map((block, i) => ({
+          ...block,
+          order: i,
+        })),
+        creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
+        publishedDate:
+          validationResults.data.publishedDate &&
+          validationResults.data.publishedDate.toISOString().split("T")[0],
+      })
+      if (res.error) {
+        console.error(res.error)
+        return
+      }
+      navigator(`/articles/${res.articleId}`)
+    } else {
+      const res = await createArticle({
+        ...validationResults.data,
+        contentBlocks: validationResults.data.contentBlocks.map((block, i) => ({
+          ...block,
+          order: i,
+        })),
+        creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
+        publishedDate:
+          validationResults.data.publishedDate &&
+          validationResults.data.publishedDate.toISOString().split("T")[0],
+      })
+      if (res.error) {
+        console.error(res.error)
+        return
+      }
+      navigator(`/articles/${res.articleId}`)
+    }
+    setLoading(false)
   }
 
   return (
@@ -289,15 +323,25 @@ export default function ArticleForm({ article }) {
         </Form.Group>
         <Form.Group className="mb-3 form-group">
           <Form.Label className="fw-bold">Author</Form.Label>
-          <Form.Control
-            type="text"
-            required
-            value={author}
-            minLength={1}
-            disabled={loading}
-            onChange={(event) => setAuthor(event.target.value)}
-            isInvalid={errors.author.message !== ""}
-          />
+          {users.length > 0 ? (
+            <Form.Control
+              as="select"
+              value={author}
+              disabled={loading || users.length === 1}
+              onChange={(event) => {
+                setAuthor(event.target.value)
+              }}
+              isInvalid={errors.author.message !== ""}
+            >
+              {users.map((user) => (
+                <option key={user.userId} value={user.userId}>
+                  {`${user.name} ${user.surname}`}
+                </option>
+              ))}
+            </Form.Control>
+          ) : (
+            <p>Loading...</p>
+          )}
           <Form.Control.Feedback type="invalid">{errors.author.message}</Form.Control.Feedback>
         </Form.Group>
       </div>
@@ -306,8 +350,9 @@ export default function ArticleForm({ article }) {
           <Form.Label className="fw-bold">Creation Date</Form.Label>
           <DatePicker
             selected={creationDate}
+            onChange={(date) => setCreationDate(date)}
             closeOnScroll
-            disabled
+            disabled={loading || isUser}
             dateFormat={"dd/MM/yyyy"}
             className="form-control"
             wrapperClassName="w-100"
@@ -319,6 +364,7 @@ export default function ArticleForm({ article }) {
             selected={publishedDate}
             onChange={(date) => setPublishedDate(date)}
             closeOnScroll
+            minDate={creationDate}
             dateFormat={"dd/MM/yyyy"}
             placeholderText="Click to select a publication date"
             isClearable
@@ -327,9 +373,9 @@ export default function ArticleForm({ article }) {
             className="form-control"
             isInvalid={errors.publishedDate.message !== ""}
           />
-          <Form.Control.Feedback type="invalid">
-            {errors.publishedDate.message}
-          </Form.Control.Feedback>
+          {errors.publishedDate.message !== "" && (
+            <p className="article-form-error">{errors.publishedDate.message}</p>
+          )}
         </Form.Group>
       </div>
       <div className="mt-3 blocks-wrapper">
@@ -418,13 +464,13 @@ export default function ArticleForm({ article }) {
         </Button>
         <div className="form-actions">
           <Button variant="primary" type="submit" disabled={loading}>
-            Save
+            {article ? "Save changes" : "Create new article"}
           </Button>
-          <Button variant="danger" disabled={loading}>
-            <Link to={nextpage} className="text-decoration-none text-white">
+          <Link relative="path" to={"../"} className="text-decoration-none text-white">
+            <Button variant="danger" disabled={loading} style={{ width: "100%" }}>
               Go Back
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       </div>
     </Form>

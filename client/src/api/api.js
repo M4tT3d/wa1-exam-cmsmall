@@ -24,9 +24,33 @@ export async function getArticleById(id) {
   return await handleRequest(url, { method: "GET", credentials: "include" })
 }
 
-export async function getAllArticles(){
+export async function getAllArticles() {
   const url = new URL(`/api/all-articles`, serverUrl)
   return await handleRequest(url, { method: "GET", credentials: "include" })
+}
+
+export async function createArticle(articleData) {
+  const url = new URL("/api/articles", serverUrl)
+  return await handleRequest(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(articleData),
+  }, 201)
+}
+
+export async function updateArticle(id, articleData) {
+  const url = new URL(`/api/articles/${id}`, serverUrl)
+  return await handleRequest(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(articleData),
+  })
 }
 
 export async function getGlobal(key) {
@@ -46,7 +70,7 @@ export async function updateGlobal(key, value) {
   })
 }
 
-export async function getAllUsers(){
+export async function getAllUsers() {
   const url = new URL(`/api/users`, serverUrl)
   return await handleRequest(url, { method: "GET", credentials: "include" })
 }
