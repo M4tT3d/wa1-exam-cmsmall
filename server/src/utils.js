@@ -32,6 +32,31 @@ export function canEditArticle(req, res, next) {
   })
 }
 
+export function canAccessArticle(req, res, next) {
+  const articleId = parseInt(req.params.id, 10)
+  if (isNaN(articleId)) {
+    return res.status(400).json({ error: "Invalid article id" })
+  }
+  db.get(
+    "SELECT publishedDate, userId FROM article WHERE articleId = ?",
+    [articleId],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: err })
+      if (!row) return res.status(404).json({ error: "Article not found." })
+      if (row.publishedDate !== null && new Date() >= new Date(row.publishedDate)) {
+        return next()
+      } else if (
+        req.isAuthenticated() &&
+        (row.userId === req.user.id || req.user.role === roles.ADMIN)
+      ) {
+        return next()
+      } else {
+        return res.status(401).json({ error: "Not authorized" })
+      }
+    }
+  )
+}
+
 export function isAdmin(req, res, next) {
   if (req.user.role === roles.ADMIN) {
     return next()

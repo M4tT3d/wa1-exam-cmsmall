@@ -50,13 +50,18 @@ INSERT INTO user (email, name, surname, role, salt, hash) VALUES ('user2@email.c
 INSERT INTO user (email, name, surname, role, salt, hash) VALUES ('user3@email.com', 'Dan', 'Reynolds', 'user', '37a7d1a971e6b0d74fc662dd961c0d6c', 'e34e8aabb57feea430aec7a554bcb6b79565e1195edcf5c70fc13ff85fe8a5e6');
 
 -- ARTICLES
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 1', '2023-01-01', '2022-01-01', 2);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 2', '2019-01-02', '2019-01-02', 3);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 3', null, '2019-01-03', 3);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 4', '2020-01-04', '2019-01-04', 4);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 5', null, '2019-01-05', 4);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 6', '2024-01-06', '2019-01-06', 4);
-INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 7', '2023-01-07', '2023-01-06', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 1', null, '2022-01-01', 2);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 2', '2022-01-01', '2022-01-01', 2);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 3', '2024-01-01', '2022-01-01', 2);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 4', '2019-01-02', '2019-01-02', 3);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 5', null, '2019-01-03', 3);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 6', '2023-12-12', '2019-01-03', 3);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 7', null, '2019-01-03', 3);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 8', '2020-01-04', '2019-01-04', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 9', '2020-01-04', '2019-01-04', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 10', null, '2019-01-05', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 11', '2024-01-06', '2019-01-06', 4);
+INSERT INTO article (title, publishedDate, createdAt, userId) VALUES ('Article 12', '2023-05-05', '2023-05-01', 4);
 
 -- BLOCKS
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 1', 0, 1);
@@ -80,4 +85,19 @@ INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_
 INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 7', 0, 7);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 7);
 INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_5', 2, 7);
-
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 8', 0, 8);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 8);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_6', 2, 8);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 9', 0, 9);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 1, 9);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('image', 'wallpaper_5', 2, 9);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 10', 3, 9);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Nullam id dolor id nibh ultricies vehicula ut id elit.', 0, 10);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'BOH', 1, 10);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'test test', 2, 10);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 11', 0, 11);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'test test', 1, 11);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 12', 0, 12);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'test test', 2, 12);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('header', 'Article 13', 1, 12);
+INSERT INTO block (type, value, 'order', articleId) VALUES ('paragraph', 'test test', 3, 12);
