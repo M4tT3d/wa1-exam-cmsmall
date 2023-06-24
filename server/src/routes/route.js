@@ -3,6 +3,7 @@ import { Router } from "express"
 import {
   createArticle,
   deleteArticle,
+  getAllArticles,
   getArticleByUserId,
   getArticles,
   updateArticle,
@@ -24,6 +25,7 @@ router.get("/sessions/current", getCurrentUser)
 //Articles routes
 router.get("/articles/:id", canAccessArticle, getArticles)
 router.get("/articles", getArticles)
+router.get("/all-articles", isLoggedIn, isAdmin, getAllArticles)
 router.post("/articles", isLoggedIn, validateArticle, createArticle)
 router.get("/user/articles", isLoggedIn, getArticleByUserId)
 router.patch("/articles/:id", isLoggedIn, canEditArticle, validateArticle, updateArticle)
