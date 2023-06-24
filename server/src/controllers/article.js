@@ -2,7 +2,6 @@
 import {
   insertArticle,
   listAllArticles,
-  listArticleByUserId,
   listArticles,
   patchArticle,
   removeArticle,
@@ -40,16 +39,6 @@ export function createArticle(req, res) {
   insertArticle(req.body)
     .then((articleId) => {
       res.status(201).json({ articleId: articleId })
-    })
-    .catch((error) => {
-      res.status(500).json({ error: error })
-    })
-}
-
-export function getArticleByUserId(req, res) {
-  listArticleByUserId(req.user.id)
-    .then((article) => {
-      res.status(200).json(article)
     })
     .catch((error) => {
       res.status(500).json({ error: error })

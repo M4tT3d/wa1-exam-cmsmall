@@ -92,19 +92,6 @@ export function insertArticle(article) {
   })
 }
 
-export function listArticleByUserId(id) {
-  return new Promise((resolve, reject) => {
-    db.all(
-      `SELECT * FROM article JOIN user ON article.userId = user.userId JOIN block ON article.articleId = block.articleId WHERE article.userId = ?`,
-      [id],
-      (error, rows) => {
-        if (error) reject(error)
-        resolve(reduceArticlesBlocks(rows))
-      }
-    )
-  })
-}
-
 export function patchArticle(article, articleId) {
   return new Promise((resolve, reject) => {
     db.run(

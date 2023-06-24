@@ -45,10 +45,7 @@ export function canAccessArticle(req, res, next) {
       if (!row) return res.status(404).json({ error: "Article not found." })
       if (row.publishedDate !== null && new Date() >= new Date(row.publishedDate)) {
         return next()
-      } else if (
-        req.isAuthenticated() &&
-        (row.userId === req.user.id || req.user.role === roles.ADMIN)
-      ) {
+      } else if (req.isAuthenticated()) {
         return next()
       } else {
         return res.status(401).json({ error: "Not authorized" })

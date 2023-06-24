@@ -34,3 +34,14 @@ export function getUser(email, password) {
     })
   })
 }
+
+export function listAllUsers() {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT userId, name, surname FROM user"
+    db.all(sql, (err, rows) => {
+      if (err) reject(err)
+      else if (!rows || rows.length === 0) resolve(false)
+      else resolve(rows)
+    })
+  })
+}
