@@ -26,7 +26,7 @@ export default function Navbar() {
   const loggedInLinks = [
     { title: "Home", icon: IconHome2, path: "/" },
     { title: "My articles", icon: IconList, path: "/my-articles" },
-    { title: "Add Article", icon: IconFilePlus, path: "/article/add" },
+    { title: "Add Article", icon: IconFilePlus, path: "/articles/add" },
   ]
   const linksToUse = user ? loggedInLinks : links
   return (

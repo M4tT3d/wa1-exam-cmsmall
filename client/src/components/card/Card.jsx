@@ -31,7 +31,7 @@ export default function Card({ id, title, author, publishedDate, content }) {
   return (
     <BootstrapCard className="card-wrapper" border="dark">
       <BootstrapCard.Header className="d-flex justify-content-end">
-        <Link to={`/article/${id}`} className="text-reset">
+        <Link to={`/articles/${id}`} className="text-reset">
           <Button variant="dark" size="sm" className="card-btn">
             <IconBook size={20} />
             <p>Read post</p>

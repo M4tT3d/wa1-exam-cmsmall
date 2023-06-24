@@ -20,9 +20,9 @@ function App() {
           <Routes>
             <Route index element={<Index />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/article/:id" element={<Article />} />
-            <Route path="/article/:id/edit" element={<EditArticle />} />
-            <Route path="/article/add" element={<AddArticle />} />
+            <Route path="/articles/:id" element={<Article />} />
+            <Route path="/articles/:id/edit" element={<EditArticle />} />
+            <Route path="/articles/add" element={<AddArticle />} />
             <Route path="/globals/edit" element={<EditCMSGlobals />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
