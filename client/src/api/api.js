@@ -21,11 +21,11 @@ export async function getAllPublishedArticles() {
 
 export async function getArticleById(id) {
   const url = new URL(`/api/articles/${id}`, serverUrl)
-  return await handleRequest(url, { method: "GET" })
+  return await handleRequest(url, { method: "GET", credentials: "include" })
 }
 
-export async function getArticleByUserId() {
-  const url = new URL("/api/user/articles", serverUrl)
+export async function getAllArticles(){
+  const url = new URL(`/api/all-articles`, serverUrl)
   return await handleRequest(url, { method: "GET", credentials: "include" })
 }
 
@@ -44,6 +44,11 @@ export async function updateGlobal(key, value) {
     credentials: "include",
     body: JSON.stringify({ value: value }),
   })
+}
+
+export async function getAllUsers(){
+  const url = new URL(`/api/users`, serverUrl)
+  return await handleRequest(url, { method: "GET", credentials: "include" })
 }
 
 export async function login(userData) {

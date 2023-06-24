@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Button, Container } from "react-bootstrap"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { getAllPublishedArticles, getArticleByUserId } from "../api/api"
+import { getAllArticles, getAllPublishedArticles } from "../api/api"
 import { useAuth } from "../components/auth/auth"
 import Card from "../components/card/Card"
 import GridContainer from "../components/gridContainer/GridContainer"
@@ -11,6 +11,7 @@ import { BlockTypes } from "../utils/constants"
 export default function Index() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
+  const [title, setTitle] = useState("All Published Articles")
   const [isLoading, setIsLoading] = useState(true)
   const navigation = useNavigate()
   const location = useLocation()
@@ -27,15 +28,17 @@ export default function Index() {
 
   useEffect(() => {
     setIsLoading(true)
-    if (location.pathname === "/my-articles") {
+    if (location.pathname === "/all-articles") {
       if (!user) {
         navigation("/login", { replace: true })
         return
+      } else {
+        setTitle("All Articles")
+        getAllArticles().then((data) => {
+          setData([...data])
+          setIsLoading(false)
+        })
       }
-      getArticleByUserId().then((data) => {
-        setData([...data])
-        setIsLoading(false)
-      })
     } else
       getAllPublishedArticles().then((data) => {
         setData([...data])
@@ -60,17 +63,29 @@ export default function Index() {
       </Container>
     )
   return (
-    <GridContainer cols={data.length} maxCols={3}>
-      {data.map((item) => (
-        <Card
-          key={item.articleId}
-          id={item.articleId}
-          title={item.title}
-          author={item.author}
-          publishedDate={item.publishedDate}
-          content={getCardContents(item)}
-        />
-      ))}
-    </GridContainer>
+    <Container>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          margin: "1rem 0",
+        }}
+      >
+        <h1>{title}</h1>
+      </div>
+      <GridContainer cols={data.length} maxCols={3}>
+        {data.map((item) => (
+          <Card
+            key={item.articleId}
+            id={item.articleId}
+            title={item.title}
+            author={item.author}
+            publishedDate={item.publishedDate}
+            content={getCardContents(item)}
+          />
+        ))}
+      </GridContainer>
+    </Container>
   )
 }

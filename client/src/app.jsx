@@ -24,7 +24,7 @@ function App() {
             <Route path="/articles/:id/edit" element={<EditArticle />} />
             <Route path="/articles/add" element={<AddArticle />} />
             <Route path="/globals/edit" element={<EditCMSGlobals />} />
-            <Route path="/my-articles" element={<Index />} />
+            <Route path="/all-articles" element={<Index />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>

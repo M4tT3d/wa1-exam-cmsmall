@@ -2,6 +2,9 @@ import { useEffect, useState } from "react"
 import { Col, Container, Row } from "react-bootstrap"
 import "./index.css"
 
+// cols is the length of the children array
+// maxCols is the maximum number of columns to display
+// maxTabCols is the maximum number of columns to display based on the window width
 export default function GridContainer({ cols, maxCols, children }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [maxTabCols, setMaxTabCols] = useState(maxCols / 2)
@@ -17,7 +20,7 @@ export default function GridContainer({ cols, maxCols, children }) {
     } else if (windowWidth >= 768 && windowWidth < 1200) {
       setMaxTabCols(2)
       setMaxRows(Math.ceil(cols / maxTabCols))
-    } else if (windowWidth >= 1200) {
+    } else if (windowWidth >= 1200 && windowWidth < 1400) {
       setMaxTabCols(3)
       setMaxRows(Math.ceil(cols / maxTabCols))
     } else {
