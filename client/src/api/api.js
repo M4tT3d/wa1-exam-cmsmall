@@ -31,14 +31,18 @@ export async function getAllArticles() {
 
 export async function createArticle(articleData) {
   const url = new URL("/api/articles", serverUrl)
-  return await handleRequest(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  return await handleRequest(
+    url,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(articleData),
     },
-    credentials: "include",
-    body: JSON.stringify(articleData),
-  }, 201)
+    201
+  )
 }
 
 export async function updateArticle(id, articleData) {

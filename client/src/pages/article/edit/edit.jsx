@@ -39,7 +39,7 @@ export default function EditArticle() {
   return (
     <div className="wrapper-art-form">
       <Card className="edit-card">
-        <ArticleForm article={data} users={users} isUser={!isAdmin} />
+        <ArticleForm article={data} users={users} isUser={!isAdmin} authorId={user.id} />
       </Card>
     </div>
   )

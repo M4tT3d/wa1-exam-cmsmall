@@ -53,7 +53,7 @@ const schema = z
     }
   })
 
-export default function ArticleForm({ article, users, isUser = true }) {
+export default function ArticleForm({ article, users, isUser = true, authorId }) {
   //form management
   const [validated, setValidated] = useState(false)
   const [errors, setErrors] = useState({
@@ -71,7 +71,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
   //article management
   const [articleId, setArticleId] = useState(article ? article.articleId : undefined)
   const [title, setTitle] = useState(article ? article.title : "")
-  const [author, setAuthor] = useState(article ? article.userId : users[0].userId)
+  const [author, setAuthor] = useState(article ? article.userId : authorId)
   const [publishedDate, setPublishedDate] = useState(
     article && article.publishedDate ? new Date(article.publishedDate) : null
   )
@@ -87,7 +87,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
   const handleChangeValue = (index, event) => {
     const newFields = [...fields]
     newFields[index].value = event.target.value
-    setFields(newFields)
+    setFields([...newFields])
   }
 
   const swapFields = (index1, index2) => {
@@ -95,7 +95,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
     const temp = newFields[index1]
     newFields[index1] = newFields[index2]
     newFields[index2] = temp
-    setFields(newFields)
+    setFields([...newFields])
   }
 
   const renderInputField = (index) => {
@@ -180,7 +180,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
   const handleRemoveField = (index) => {
     const newFields = [...fields]
     newFields.splice(index, 1)
-    setFields(newFields)
+    setFields([...newFields])
     setErrors((prev) => {
       const newErrors = [...prev.blocks]
       newErrors.splice(index, 1)
@@ -224,7 +224,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
           case "title":
             setErrors((prev) => ({ ...prev, title: { message: val.message } }))
             break
-          case "author":
+          case "userId":
             setErrors((prev) => ({ ...prev, author: { message: val.message } }))
             break
           case "publishedDate":
@@ -267,35 +267,26 @@ export default function ArticleForm({ article, users, isUser = true }) {
       return
     }
     setValidated(true)
+    const toSave = {
+      ...validationResults.data,
+      contentBlocks: validationResults.data.contentBlocks.map((block, i) => ({
+        ...block,
+        order: i,
+      })),
+      creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
+      publishedDate:
+        validationResults.data.publishedDate &&
+        validationResults.data.publishedDate.toISOString().split("T")[0],
+    }
     if (article) {
-      const res = await updateArticle(articleId, {
-        ...validationResults.data,
-        contentBlocks: validationResults.data.contentBlocks.map((block, i) => ({
-          ...block,
-          order: i,
-        })),
-        creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
-        publishedDate:
-          validationResults.data.publishedDate &&
-          validationResults.data.publishedDate.toISOString().split("T")[0],
-      })
+      const res = await updateArticle(articleId, toSave)
       if (res.error) {
         console.error(res.error)
         return
       }
       navigator(`/articles/${res.articleId}`)
     } else {
-      const res = await createArticle({
-        ...validationResults.data,
-        contentBlocks: validationResults.data.contentBlocks.map((block, i) => ({
-          ...block,
-          order: i,
-        })),
-        creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
-        publishedDate:
-          validationResults.data.publishedDate &&
-          validationResults.data.publishedDate.toISOString().split("T")[0],
-      })
+      const res = await createArticle(toSave)
       if (res.error) {
         console.error(res.error)
         return
@@ -324,8 +315,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
         <Form.Group className="mb-3 form-group">
           <Form.Label className="fw-bold">Author</Form.Label>
           {users.length > 0 ? (
-            <Form.Control
-              as="select"
+            <Form.Select
               value={author}
               disabled={loading || users.length === 1}
               onChange={(event) => {
@@ -338,7 +328,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
                   {`${user.name} ${user.surname}`}
                 </option>
               ))}
-            </Form.Control>
+            </Form.Select>
           ) : (
             <p>Loading...</p>
           )}
@@ -371,7 +361,6 @@ export default function ArticleForm({ article, users, isUser = true }) {
             disabled={loading}
             wrapperClassName="w-100"
             className="form-control"
-            isInvalid={errors.publishedDate.message !== ""}
           />
           {errors.publishedDate.message !== "" && (
             <p className="article-form-error">{errors.publishedDate.message}</p>
@@ -399,8 +388,7 @@ export default function ArticleForm({ article, users, isUser = true }) {
               <Col className="block">
                 <Form.Group className="form-group">
                   <Form.Label className="fw-bold">Type:</Form.Label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     value={field.type}
                     disabled={loading}
                     onChange={(event) => {
@@ -415,8 +403,8 @@ export default function ArticleForm({ article, users, isUser = true }) {
                     <option value={BlockTypes.PARAGRAPH}>Paragraph</option>
                     <option value={BlockTypes.HEADER}>Header</option>
                     <option value={BlockTypes.IMAGE}>Image</option>
-                  </Form.Control>
-                  <Col xs="auto" className="blocks-btn-row">
+                  </Form.Select>
+                  <Col xs="auto" className="blocks-btn-row article-block-buttons">
                     {fields.length > 1 && (
                       <Button
                         variant="danger"
@@ -466,11 +454,19 @@ export default function ArticleForm({ article, users, isUser = true }) {
           <Button variant="primary" type="submit" disabled={loading}>
             {article ? "Save changes" : "Create new article"}
           </Button>
-          <Link relative="path" to={"../"} className="text-decoration-none text-white">
-            <Button variant="danger" disabled={loading} style={{ width: "100%" }}>
-              Go Back
-            </Button>
-          </Link>
+          {article ? (
+            <Link relative="path" to={"../"} className="text-decoration-none text-white">
+              <Button variant="danger" disabled={loading} style={{ width: "100%" }}>
+                Go Back
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/" className="text-decoration-none text-white">
+              <Button variant="danger" disabled={loading} style={{ width: "100%" }}>
+                Go Home
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </Form>
