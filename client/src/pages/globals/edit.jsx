@@ -7,7 +7,7 @@ import { roles } from "../../utils/constants"
 import "./index.css"
 
 const schema = z.object({
-  title: z.string().min(1),
+  title: z.string().trim().min(1),
 })
 
 export default function EditCMSGlobals() {

@@ -19,7 +19,7 @@ const customErrorMessage = [
 const schema = z
   .object({
     articleId: z.number().int().optional(),
-    title: z.string().min(1, { message: "Title is required" }),
+    title: z.string().trim().min(1, { message: "Title is required" }),
     userId: z.number().int({ message: "Author is required" }),
     creationDate: z.date(),
     publishedDate: z.date().optional().nullable(),
@@ -27,14 +27,16 @@ const schema = z
       .array(
         z.object({
           type: z.nativeEnum(BlockTypes),
-          data: z.string().min(1, { message: "Value is required" }),
+          data: z.string().trim().min(1, { message: "Value is required" }),
         })
       )
       .min(2, { message: customErrorMessage[0] })
       .refine(
         (value) => {
           const hasHeader = value.some((item) => item.type === BlockTypes.HEADER)
-          const hasOthers = value.some((item) => item.type !== BlockTypes.HEADER)
+          const hasOthers = value.some(
+            (item) => item.type === BlockTypes.PARAGRAPH || item.type === BlockTypes.IMAGE
+          )
           return hasHeader && hasOthers
         },
         { message: customErrorMessage[1], custom: true }

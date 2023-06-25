@@ -34,6 +34,7 @@ export default function AddArticle() {
   return (
     <div className="wrapper-art-form">
       <Card className="edit-card">
+        <Card.Title>Create a new article</Card.Title>
         <ArticleForm users={users} isUser={!isAdmin} authorId={user.id} />
       </Card>
     </div>

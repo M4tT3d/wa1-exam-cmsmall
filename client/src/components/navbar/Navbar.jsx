@@ -82,7 +82,7 @@ export default function Navbar() {
                 }}
               >
                 <IconLogout size={20} />
-                <p>Logout</p>
+                <p>{`Goodbye ${user.name}`}</p>
               </Nav.Link>
             )}
           </Nav>
