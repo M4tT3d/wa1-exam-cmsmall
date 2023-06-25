@@ -57,6 +57,11 @@ export async function updateArticle(id, articleData) {
   })
 }
 
+export async function deleteArticle(id) {
+  const url = new URL(`/api/articles/${id}`, serverUrl)
+  return await handleRequest(url, { method: "DELETE", credentials: "include" })
+}
+
 export async function getGlobal(key) {
   const url = new URL(`/api/globals/${key}`, serverUrl)
   return await handleRequest(url, { method: "GET" })
