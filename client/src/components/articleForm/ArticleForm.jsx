@@ -45,7 +45,7 @@ const schema = z
   .superRefine((obj, ctx) => {
     const { creationDate, publishedDate } = obj
     if (publishedDate) {
-      if (new Date(publishedDate) < new Date(creationDate)) {
+      if (publishedDate < creationDate) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Published date must be after creation date",
@@ -63,6 +63,7 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
     author: { message: "" },
     publishedDate: { message: "" },
     blocks: article ? article.contentBlocks.map(() => ({ message: "" })) : [{ message: "" }],
+    other: { message: "" },
   })
   const showCustomFeedback = errors.blocks.some(
     (item) => item.message === customErrorMessage[0] || item.message === customErrorMessage[1]
@@ -78,7 +79,15 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
     article && article.publishedDate ? new Date(article.publishedDate) : null
   )
   const [creationDate, setCreationDate] = useState(
-    article ? new Date(article.createdAt) : new Date()
+    article
+      ? () => {
+          const [year, month, day] = article.createdAt.split("-").map((item) => parseInt(item))
+          return new Date(year, month - 1, day)
+        }
+      : () => {
+          const date = new Date()
+          return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+        }
   )
   const [fields, setFields] = useState(
     article
@@ -210,7 +219,14 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
       author: { message: "" },
       publishedDate: { message: "" },
       blocks: errors.blocks.map(() => ({ message: "" })),
+      other: { message: "" },
     })
+    const formatData = (data) => {
+      return `${data.getFullYear()}-${(data.getMonth() + 1).toString().padStart(2, "0")}-${data
+        .getDate()
+        .toString()
+        .padStart(2, "0")}`
+    }
     const articleToValidate = {
       articleId,
       title,
@@ -275,31 +291,38 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
         ...block,
         order: i,
       })),
-      creationDate: validationResults.data.creationDate.toISOString().split("T")[0],
+      creationDate: formatData(validationResults.data.creationDate),
       publishedDate:
-        validationResults.data.publishedDate &&
-        validationResults.data.publishedDate.toISOString().split("T")[0],
+        validationResults.data.publishedDate && formatData(validationResults.data.publishedDate),
     }
     if (article) {
       const res = await updateArticle(articleId, toSave)
       if (res.error) {
-        console.error(res.error)
+        setErrors((prev) => ({ ...prev, other: { message: res.error } }))
+        setLoading(false)
+        setValidated(false)
         return
       }
+      setLoading(false)
+      setValidated(true)
       navigator(`/articles/${res.articleId}`)
     } else {
       const res = await createArticle(toSave)
       if (res.error) {
-        console.error(res.error)
+        setErrors((prev) => ({ ...prev, other: { message: res.error } }))
+        setLoading(false)
+        setValidated(false)
         return
       }
+      setLoading(false)
+      setValidated(true)
       navigator(`/articles/${res.articleId}`)
     }
-    setLoading(false)
   }
 
   return (
     <Form noValidate validated={validated} className="mb-0" onSubmit={handleSubmit}>
+      {errors?.other?.message && <p className="article-form-error">{errors.other.message}</p>}
       <div className="form-row">
         <Form.Group className="mb-3 form-group">
           <Form.Label className="fw-bold">Title</Form.Label>

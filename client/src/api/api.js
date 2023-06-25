@@ -8,7 +8,10 @@ async function handleRequest(url, options, expectedStatus = 200) {
     const data = await fetch(url, options)
     const dataJson = await data.json()
     if (data.status === expectedStatus) return dataJson
-    else throw new Error(dataJson.error?.message || dataJson.error)
+    else {
+      if (dataJson.error?.message) throw new Error(dataJson.error.message)
+      else throw new Error(dataJson.error[0].message)
+    }
   } catch (error) {
     return { error: error.message }
   }
