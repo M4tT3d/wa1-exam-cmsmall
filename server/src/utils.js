@@ -67,7 +67,7 @@ export function validateArticle(req, res, next) {
 
   if (!results.success) {
     results.error.issues.forEach((issue) => {
-      errors.push({ path: issue.path, maessage: issue.message })
+      errors.push({ path: issue.path, message: issue.message })
     })
     return res.status(422).json({ error: errors })
   }
