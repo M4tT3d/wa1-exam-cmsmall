@@ -10,7 +10,14 @@ import {
 import { createSession, deleteSession, getCurrentUser } from "../controllers/auth.js"
 import { getGlobalData, updateGlobalData } from "../controllers/global.js"
 import { getAllUsers } from "../controllers/user.js"
-import { canAccessArticle, canEditArticle, isAdmin, isLoggedIn, validateArticle } from "../utils.js"
+import {
+  canAccessArticle,
+  canEditArticle,
+  isAdmin,
+  isLoggedIn,
+  isValidGlobalKey,
+  validateArticle,
+} from "../utils.js"
 
 const router = Router()
 
@@ -34,6 +41,6 @@ router.delete("/articles/:id", isLoggedIn, canEditArticle, deleteArticle)
 router.get("/users", isLoggedIn, isAdmin, getAllUsers)
 
 // Global routes
-router.get("/globals/:key", getGlobalData)
-router.patch("/globals/:key", isLoggedIn, isAdmin, updateGlobalData)
+router.get("/globals/:key", isValidGlobalKey, getGlobalData)
+router.patch("/globals/:key", isLoggedIn, isAdmin, isValidGlobalKey, updateGlobalData)
 export default router

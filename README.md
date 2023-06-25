@@ -16,15 +16,15 @@
 
   - Request Body: **None**
   - Response Status: `200` OK, `500` if some errors occur
-  - Response Body:
+  - Response Body: an array of articles
     ```
     [
       {
         articleId: number - Article ID
         title: string - Article title
-        publishedDate: Date - The publication date
-        createdAt: Date - The creation date
-        userId: integer - The user that owns the article
+        publishedDate: string - The publication date in format yyyy-mm-dd
+        createdAt: string - The creation date in format yyyy-mm-dd
+        userId: number - The user that owns the article
         author: string - The author name
         contentBlocks: [
           {
@@ -34,6 +34,56 @@
         ]
       }
     ]
+    ```
+<br />
+
+- **GET** `/api/all-articles` - Get all the saved articles
+
+  - Prerequisite: User is logged in
+  - Request Body: **None**
+  - Response Status: `200` OK, `500` if some errors occur, `401` Unauthorized
+  - Response Body: an array of articles
+    ```
+    [
+      {
+        articleId: number - Article ID
+        title: string - Article title
+        publishedDate: string - The publication date in format yyyy-mm-dd
+        createdAt: string - The creation date in format yyyy-mm-dd
+        userId: number - The user that owns the article
+        author: string - The author name
+        contentBlocks: [
+          {
+            type: string - The type of the block
+            data: string - The content of the block
+          }
+        ]
+      }
+    ]
+    ```
+<br />
+
+- **GET** `/api/articles/:id` - Get a specific article
+
+  - Prerequisite: User must be logged in if he want to get an article that is not published, otherwise is not necessary
+  - Request Body: **None**
+  - Response Status: `200` OK, `500` if some errors occur, `401` Unauthorized, `400` if the id is not a number, `404` if the article is not found
+  - Response Body:
+    ```
+    {
+      articleId: number - Article ID
+      title: string - Article title
+      publishedDate: string - The publication date in format yyyy-mm-dd
+      createdAt: string - The creation date in format yyyy-mm-dd
+      userId: number - The user that owns the article
+      author: string - The author name
+      contentBlocks: [
+        {
+          type: string - The type of the block
+          data: string - The content of the block
+        }
+      ]
+    }
     ```
 <br />
 
@@ -43,107 +93,97 @@
   - Request Body:
     ```
     {
-        articleId: number - Article ID
-        title: string - Article title
-        publishedDate: Date - The publication date
-        createdAt: Date - The creation date
-        userId: integer - The user that owns the article
-        author: string - The author name
-        contentBlocks: [
-          {
-            type: string - The type of the block
-            data: string - The content of the block
-            order: number - The position of the block in the array
-          }
-        ]
-      }
+      title: string - Article title
+      publishedDate: string - The publication date in format yyyy-mm-dd
+      createdAt: string - The creation date in format yyyy-mm-dd
+      userId: number - The user that owns the article
+      author: string - The author name
+      contentBlocks: [
+        {
+          type: string - The type of the block
+          data: string - The content of the block
+          order: number - The position of the block in the array
+        }
+      ]
+    }
     ```
-  - Response Status: `201` Created, `500` if some errors occur
+  - Response Status: `201` Created, `500` if some errors occur, `401` Unauthorized, `422` Unprocessable entity (Bad body format) if data does not respect the expected format
   - Response Body:
     ```
       {
-        articleId: number - Article ID
+        articleId: number - Article ID of the new article
       }
     ```
 <br />
 
-- **PATCH** `/api/articles/:id` - Edit the article with id equals to :id
+- **PATCH** `/api/articles/:id` - Edit an article
 
   - Prerequisite: User is logged in and he must be the owner of the article or an admin
   - Request Body:
     ```
     {
-        articleId: number - Article ID
-        title: string - Article title
-        publishedDate: Date - The publication date
-        createdAt: Date - The creation date
-        userId: integer - The user that owns the article
-        author: string - The author name
-        contentBlocks: [
-          {
-            type: string - The type of the block
-            data: string - The content of the block
-            order: number - The position of the block in the array
-          }
-        ]
-      }
+      articleId: number - Article ID
+      title: string - Article title
+      publishedDate: string - The publication date in format yyyy-mm-dd
+      createdAt: string - The creation date in format yyyy-mm-dd
+      userId: number - The user that owns the article
+      author: string - The author name
+      contentBlocks: [
+        {
+          type: string - The type of the block
+          data: string - The content of the block
+          order: number - The position of the block in the array
+        }
+      ]
+    }
     ```
-  - Response Status: `200` OK, `500` if some errors occur
+  - Response Status: `200` OK, `500` if some errors occur, `401` Unauthorized, `422` Unprocessable entity (Bad body format) if data does not respect the expected format, `400` if the id is not a number, `404` if the article is not found
   - Response Body:
     ```
     {
-        articleId: number - Article ID
+      articleId: number - Article ID of the edited article
     }
     ```
 <br />
 
-- **GET** `/user/articles` - Get all articles of the logged user. All the block are ordered by order field
-
-  - Prerequisite: User is logged in
-  - Request Body: **None**
-  - Response Status: `200` OK, `500` if some errors occur
-  - Response Body:
-    ```
-    [
-      {
-        articleId: number - Article ID
-        title: string - Article title
-        publishedDate: Date - The publication date
-        createdAt: Date - The creation date
-        userId: integer - The user that owns the article
-        author: string - The author name
-        contentBlocks: [
-          {
-            type: string - The type of the block
-            data: string - The content of the block
-          }
-        ]
-      }
-    ]
-    ```
-<br />
-
-- **DELETE** `/api/articles/:id` - Edit the article with id equals to :id
+- **DELETE** `/api/articles/:id` - Delete an article
 
   - Prerequisite: User is logged in and he must be the owner of the article or an admin
   - Request Body: **None**
-  - Response Status: `200` OK, `500` if some errors occur
+  - Response Status: `200` OK, `500` if some errors occur, `401` Unauthorized, `400` if the id is not a number, `404` if the article is not found
   - Response Body:
     ```
     {
-        message: text
+      message: text
     }
+    ```
+<br />
+
+- **GET** `/api/users` - Get all users info
+
+  - Prerequisite: User is an admin
+  - Request Body: **None**
+  - Response Status: `200` OK, `500` if some errors occur, `401` Unauthorized
+  - Response Body: an array of user
+    ```
+    [
+      {
+        userId: number - The user id
+        name: string - The user name
+        surname: string - The user surname
+      }
+    ]
     ```
 <br />
 
 - **GET** `/api/globals/:key` - Get the info based on the key param
 
   - Request Body: **None**
-  - Response Status: `200` OK, `500` if some errors occur
+  - Response Status: `200` OK, `500` if some errors occur, `404` if the key is not found
   - Response Body:
     ```
     {
-        value: text - The info requested
+      value: text - The info requested
     }
     ```
 <br />
@@ -154,25 +194,25 @@
   - Request Body:
     ```
     {
-        value: text - The info that you want to update
+      value: string - The info that you want to update
     }
     ```
-  - Response Status: `200` OK, `500` if some errors occur
+  - Response Status: `200` OK, `500` if some errors occur, `404` if the key is not found
   - Response Body:
     ```
-      {
-        message: text - A message to notify that everything has done
-      }
+    {
+      message: text - A message to notify that everything has done
+    }
     ```
 <br />
 
 - **POST** `/api/sessions` - Create a new session with the logged in user
 
   - Request Body:
-    ```js
+    ```
     {
       username: 'user1@email.com',
-      password: 'password'
+      password: 'password1'
     }
     ```
   - Response Status: `200` OK, `401` Unauthorized
@@ -189,7 +229,6 @@
 
 - **GET** `/api/sessions/current` - Get the info about the current user
 
-  - Prerequisite: User is logged in
   - Request Body: **None**
   - Response Status: `200` OK, `401` Unauthorized
   - Response Body:
@@ -207,7 +246,12 @@
   - Prerequisite: User is logged in
   - Request Body: **None**
   - Response Status: `200` OK, `401` Unauthorized
-  - Response Body: **None**
+  - Response Body:
+    ```
+    {
+      message: string
+    }
+    ```
 
 ## Database Tables
 
@@ -241,8 +285,9 @@
   - `email`: text - User email
   - `name`: text - User name
   - `surname`: text - User surname
-  - `hash`: text - User password hashed
+  - `role`: text - User role (`admin` or `user`)
   - `salt`: text - Salt used to hash the password
+  - `hash`: text - User password hashed
     <br />
     <br />
 
@@ -268,6 +313,6 @@
 ## Users Credentials
 
 - admin@email.com, password (Is the admin)
-- user1@email.com, password1 (Normal user. He has 1 article)
-- user2@email.com, password2 (Normal user. He has 2 articles)
-- user3@email.com, password3 (Normal user. He has 3 articles)
+- user1@email.com, password1 (Normal user. He has 0 articles)
+- user2@email.com, password2 (Normal user. He has 6 articles)
+- user3@email.com, password3 (Normal user. He has 6 articles)
