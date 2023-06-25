@@ -9,10 +9,11 @@ const customErrorMessage = [
 
 export const articleSchema = z
   .object({
-    title: z.string().min(1, { message: "Title is required" }),
+    title: z.string().trim().min(1, { message: "Title is required" }),
     userId: z.number().int({ message: "User id is required" }),
     creationDate: z
       .string()
+      .trim()
       .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Date must be in YYYY-MM-DD format" })
       .refine((value) => {
         const fields = value.split("-").map((item) => parseInt(item, 10))
@@ -22,6 +23,7 @@ export const articleSchema = z
       }),
     publishedDate: z
       .string()
+      .trim()
       .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Date must be in YYYY-MM-DD format" })
       .optional()
       .nullable(),
@@ -29,7 +31,7 @@ export const articleSchema = z
       .array(
         z.object({
           type: z.nativeEnum(BlockTypes),
-          data: z.string().min(1, { message: "Value is required" }),
+          data: z.string().trim().min(1, { message: "Value is required" }),
           order: z.number().int().min(0, { message: "Order must be a positive integer" }),
         })
       )
@@ -57,3 +59,7 @@ export const articleSchema = z
       }
     }
   })
+
+export const titleSchema = z.object({
+  value: z.string().trim().min(1),
+})
