@@ -69,10 +69,17 @@ export function validateArticle(req, res, next) {
     results.error.issues.forEach((issue) => {
       errors.push({ path: issue.path, maessage: issue.message })
     })
-    return res.status(400).json({ error: errors })
+    return res.status(422).json({ error: errors })
   }
   if (results.data.userId === req.user.id || req.user.role === roles.ADMIN) return next()
   return res
     .status(401)
     .json({ error: "Not authorized. You can't create an article for another user" })
+}
+
+export function isValidGlobalKey(req, res, next) {
+  if (req.params.key === "title") {
+    return next()
+  }
+  return res.status(404).json({ error: "Global key not found" })
 }
