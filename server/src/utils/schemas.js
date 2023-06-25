@@ -26,7 +26,14 @@ export const articleSchema = z
       .trim()
       .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Date must be in YYYY-MM-DD format" })
       .optional()
-      .nullable(),
+      .nullable()
+      .refine((value) => {
+        if (!value) return true
+        const fields = value.split("-").map((item) => parseInt(item, 10))
+        const isValidMonth = fields[1] >= 1 && fields[1] <= 12
+        const isValidDay = fields[2] >= 1 && fields[2] <= 31
+        return isValidMonth && isValidDay
+      }),
     contentBlocks: z
       .array(
         z.object({
