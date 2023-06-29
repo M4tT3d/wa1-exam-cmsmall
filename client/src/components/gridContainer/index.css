@@ -1,0 +1,32 @@
+.grid-wrapper {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.grid-wrapper > * + * {
+  margin-top: 15px;
+}
+.grid-wrapper > :last-child {
+  margin-bottom: 40px;
+}
+@media screen and (min-width: 576px) {
+  .grid-row > * + * {
+    margin-top: 10px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .grid-row > * + * {
+    margin-top: 0;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .grid-row > * + * {
+    margin-left: 50px;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .grid-row > * + * {
+    margin-left: 20px;
+  }
+}

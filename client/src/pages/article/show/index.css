@@ -1,0 +1,33 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.title {
+  font-weight: 800;
+}
+.subtitle {
+  font-size: 10px;
+}
+.content > :first-child {
+  margin-top: 1rem;
+}
+.content > * {
+  margin-bottom: 0.8rem;
+}
+.edit-article-wrapper {
+  display: flex;
+  justify-content: end;
+}
+.edit-article-wrapper > * + * {
+  margin-left: 0.75rem;
+}
+.edit-article-button {
+  display: flex;
+  justify-content: center;
+}
+@media screen and (min-width: 768px) {
+  .img {
+    max-width: 45%;
+    height: auto;
+  }
+}

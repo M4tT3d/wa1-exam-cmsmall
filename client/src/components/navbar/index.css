@@ -1,0 +1,18 @@
+.link-content {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.link-content > * {
+  margin: 0;
+}
+
+@media screen and (min-width: 992px) {
+  .link-content {
+    color: grey;
+  }
+  .link-content:hover {
+    color: white;
+  }
+}
