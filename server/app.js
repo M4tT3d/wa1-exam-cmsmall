@@ -28,7 +28,6 @@ passport.use(
 
 // Serializing in the session the user object given from LocalStrategy(verify).
 passport.serializeUser(function (user, callback) {
-  // this user is id + username + name
   callback(null, user)
 })
 
