@@ -74,7 +74,7 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
   //article management
   const [articleId, setArticleId] = useState(article ? article.articleId : undefined)
   const [title, setTitle] = useState(article ? article.title : "")
-  const [author, setAuthor] = useState(article ? article.userId : authorId)
+  const [author, setAuthor] = useState(article ? parseInt(article.userId, 10) : parseInt(authorId, 10))
   const [publishedDate, setPublishedDate] = useState(
     article && article.publishedDate ? new Date(article.publishedDate) : null
   )
@@ -349,7 +349,7 @@ export default function ArticleForm({ article, users, isUser = true, authorId })
               isInvalid={errors.author.message !== ""}
             >
               {users.map((user) => (
-                <option key={user.userId} value={user.userId}>
+                <option key={user.userId} value={parseInt(user.userId, 10)}>
                   {`${user.name} ${user.surname}`}
                 </option>
               ))}

@@ -9,6 +9,7 @@ async function handleRequest(url, options, expectedStatus = 200) {
     const dataJson = await data.json()
     if (data.status === expectedStatus) return dataJson
     else {
+      if (typeof dataJson === "string") throw new Error(dataJson.error)
       if (dataJson.error?.message) throw new Error(dataJson.error.message)
       else throw new Error(dataJson.error[0].message)
     }
